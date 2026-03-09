@@ -56,7 +56,7 @@ end
 
 function CommWrapper:BeginQueueService()
     coroutine.wrap(function()
-        while wait() do
+        while task.wait() do
             self:ProcessQueue()
         end
     end)()
@@ -288,5 +288,6 @@ function Module:CreateChannel(): number
 end
 
 Module:MakeDebugIdHandler()
+
 
 return Module
