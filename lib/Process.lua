@@ -72,8 +72,9 @@ local Process = {
     RemoteOptions = {},
     LoopingRemotes = {},
     ConfigOverwrites = {
-        [{"sirhurt", "potassium", "wave"}] = {
-            ForceUseCustomComm = true
+    ["sirhurt"] = { ForceUseCustomComm = true },
+    ["potassium"] = { ForceUseCustomComm = true },
+    ["wave"] = { ForceUseCustomComm = true },
         }
     }
 }
@@ -137,12 +138,8 @@ end
 
 function Process:GetConfigOverwrites(Name: string)
     local ConfigOverwrites = self.ConfigOverwrites
-
-    for List, Overwrites in next, ConfigOverwrites do
-    local Found = false
-    for _, ExecutorName in next, List do
-        if ExecutorName == Name then Found = true break end
-    end
+    return ConfigOverwrites[Name]
+end
     if not Found then continue end
         return Overwrites
     end
