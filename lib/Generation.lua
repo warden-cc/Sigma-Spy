@@ -109,16 +109,26 @@ end
 
 function Generation:LoadParser(ModuleUrl: string)
     local done = false
-    
     task.spawn(function()
         print("PARSER 1 - Haciendo HttpGet")
-        local code = game:HttpGet(ModuleUrl)
-        print("PARSER 2 - HttpGet terminado, ejecutando loadstring")
-        ParserModule = loadstring(code, "Parser")()
-        print("PARSER 3 - Parser listo")
+        local ok, result = pcall(function()
+            return game:HttpGet(ModuleUrl)
+        end)
+        if not ok then
+            warn("PARSER ERROR HttpGet: " .. tostring(result))
+            done = true
+            return
+        end
+        print("PARSER 2 - HttpGet terminado")
+        local ok2, err = pcall(function()
+            ParserModule = loadstring(result, "Parser")()
+        end)
+        if not ok2 then
+            warn("PARSER ERROR loadstring: " .. tostring(err))
+        end
+        print("PARSER 3 - Parser listo: " .. tostring(ParserModule ~= nil))
         done = true
     end)
-    
     repeat task.wait(0.1) until done
 end
 
@@ -521,3 +531,4 @@ function Generation:IsReady()
 end
 
 return Generation
+
