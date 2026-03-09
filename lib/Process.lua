@@ -351,20 +351,23 @@ function Process:FindCallingLClosure(Offset: number)
     local Getfenv = Hook:GetOriginalFunc(getfenv)
     Offset += 1
 
-    while true do
-        Offset += 1
+    for i = Offset, 200 do  -- límite máximo de 200 niveles, nunca loop infinito
+        local Line = debug.info(i, "l")
 
-        --// Check if the stack level is valid
-        local IsValid = debug.info(Offset, "l") ~= -1
-        if not IsValid then return end
+        -- Stack agotado (nil o -1 dependiendo del executor)
+        if Line == nil or Line == -1 then return nil end
 
-        --// Check if the function is valid
-        local Function = debug.info(Offset, "f")
-        if not Function then return end
-        if Getfenv(Function) == SigmaENV then continue end
+        local Function = debug.info(i, "f")
+        if not Function then return nil end
+
+        -- Saltar funciones del propio Sigma Spy
+        local ok, env = pcall(Getfenv, Function)
+        if ok and env == SigmaENV then continue end
 
         return Function
     end
+
+    return nil  -- nunca llegó a encontrar nada
 end
 
 function Process:Decompile(Script: LocalScript | ModuleScript): string
@@ -601,4 +604,5 @@ end
 
 
 return Process
+
 
