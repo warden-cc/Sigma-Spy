@@ -74,16 +74,17 @@ end
 
 function Generation:Init(Data: table)
     local Modules = Data.Modules
-	local Configuration = Modules.Configuration
+    local Configuration = Modules.Configuration
 
-	--// Modules
-	Config = Modules.Config
-	Hook = Modules.Hook
-	Flags = Modules.Flags
-	
-	--// Import parser
-	local ParserUrl = Configuration.ParserUrl
-	self:LoadParser(ParserUrl)
+    print("GEN 1 - Asignando modulos")
+    Config = Modules.Config
+    Hook = Modules.Hook
+    Flags = Modules.Flags
+    
+    print("GEN 2 - Cargando parser desde: " .. tostring(Configuration.ParserUrl))
+    local ParserUrl = Configuration.ParserUrl
+    self:LoadParser(ParserUrl)
+    print("GEN 3 - Parser cargado")
 end
 
 function Generation:MakePrintable(String: string): string
@@ -108,14 +109,11 @@ function Generation:WriteDump(Content: string): string
 end
 
 function Generation:LoadParser(ModuleUrl: string)
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet(ModuleUrl), "Parser")()
-    end)
-    if not success then
-        warn("SigmaSpy: Error cargando Parser: " .. tostring(result))
-        return
-    end
-    ParserModule = result
+    print("PARSER 1 - Haciendo HttpGet")
+    local code = game:HttpGet(ModuleUrl)
+    print("PARSER 2 - HttpGet terminado, ejecutando loadstring")
+    ParserModule = loadstring(code, "Parser")()
+    print("PARSER 3 - Parser ejecutado")
 end
 
 function Generation:MakeValueSwapsTable(): table
@@ -513,4 +511,5 @@ function Generation:DumpLogs(Logs: table): string
 end
 
 return Generation
+
 
