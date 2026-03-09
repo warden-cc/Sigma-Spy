@@ -116,6 +116,7 @@ Ui:BeginLogService()
 local ActorCode = Files:MakeActorScript(Scripts, ChannelId)
 Hook:LoadHooks(ActorCode, ChannelId)
 
+task.spawn(function()
 local EnablePatches = Ui:AskUser({
 	Title = "Enable function patches?",
 	Content = {
@@ -132,3 +133,4 @@ local EnablePatches = Ui:AskUser({
 Event:Fire("BeginHooks", {
 	PatchFunctions = EnablePatches
 })
+	end)
