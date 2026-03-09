@@ -1429,8 +1429,8 @@ function Ui:CreateLog(Data: Log)
 	end
 end
 
+function Ui:IsReady()
+    return ReGui ~= nil
+end
 
 return Ui
-
-
-
