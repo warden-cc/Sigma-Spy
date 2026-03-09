@@ -407,7 +407,7 @@ function Ui:DisplayAura()
 	local Seasonal = self:TurnSeasonal(Title)
     Window:SetTitle(Seasonal)
 
-    wait(AURADELAY)
+    task.wait(AURADELAY)
 end
 
 function Ui:AuraCounterService()
@@ -1305,13 +1305,13 @@ function Ui:QueueLog(Data)
 end
 
 function Ui:ProcessLogQueue()
-	local Queue = self.LogQueue
+    local Queue = self.LogQueue
     if #Queue <= 0 then return end
 
-	--// Create a log element for each in the Queue
-    for Index, Data in next, Queue do
+    local Snapshot = table.clone(Queue)
+    table.clear(Queue)  -- limpiar antes de procesar
+    for _, Data in next, Snapshot do
         self:CreateLog(Data)
-        table.remove(Queue, Index)
     end
 end
 
@@ -1428,3 +1428,4 @@ end
 
 
 return Ui
+
