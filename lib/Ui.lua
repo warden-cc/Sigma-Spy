@@ -95,7 +95,6 @@ local CommChannel
 function Ui:Init(Data)
     local Modules = Data.Modules
 
-    print("UI 1 - Asignando modulos")
     Flags = Modules.Flags
     Generation = Modules.Generation
     Process = Modules.Process
@@ -104,18 +103,15 @@ function Ui:Init(Data)
     Communication = Modules.Communication
     Files = Modules.Files
 
-    print("UI 2 - Descargando ReGui")
-    ReGui = loadstring(game:HttpGet(`{Data.Configuration.RepoUrl}/lib/ReGui.lua`), "ReGui")()
-    print("UI 3 - ReGui cargado")
-    
-    self:LoadFont()
-    print("UI 4 - Font cargada")
-    
-    self:LoadReGui()
-    print("UI 5 - ReGui inicializado")
-    
-    self:CheckScale()
-    print("UI 6 - Scale chequeada")
+    task.spawn(function()
+        print("UI 2 - Descargando ReGui")
+        ReGui = loadstring(game:HttpGet(`{Data.Configuration.RepoUrl}/lib/ReGui.lua`), "ReGui")()
+        print("UI 3 - ReGui cargado")
+        self:LoadFont()
+        self:LoadReGui()
+        self:CheckScale()
+        print("UI 6 - Scale chequeada")
+    end)
 end
 
 function Ui:SetCommChannel(NewCommChannel: BindableEvent)
@@ -1435,5 +1431,6 @@ end
 
 
 return Ui
+
 
 
