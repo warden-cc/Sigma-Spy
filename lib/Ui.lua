@@ -252,7 +252,7 @@ function Ui:AskUser(Config: AskConfig): string
 		})
 	end
 
-	repeat wait() until Answered
+	repeat task.wait() until Answered
 	return Answered
 end
 
@@ -1425,5 +1425,6 @@ function Ui:CreateLog(Data: Log)
 		self:SetFocusedRemote(Data)
 	end
 end
+
 
 return Ui
