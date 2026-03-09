@@ -109,11 +109,26 @@ function Generation:WriteDump(Content: string): string
 end
 
 function Generation:LoadParser(ModuleUrl: string)
-    print("PARSER 1 - Haciendo HttpGet")
-    local code = game:HttpGet(ModuleUrl)
-    print("PARSER 2 - HttpGet terminado, ejecutando loadstring")
-    ParserModule = loadstring(code, "Parser")()
-    print("PARSER 3 - Parser ejecutado")
+    local done = false
+    
+    task.spawn(function()
+        print("PARSER 1 - Haciendo HttpGet")
+        local code = game:HttpGet(ModuleUrl)
+        print("PARSER 2 - HttpGet terminado")
+        ParserModule = loadstring(code, "Parser")()
+        print("PARSER 3 - Parser listo")
+        done = true
+    end)
+    
+    local timeout = 0
+    repeat
+        task.wait(0.1)
+        timeout += 0.1
+        if timeout >= 15 then
+            warn("SigmaSpy: Parser timeout!")
+            break
+        end
+    until done or ParserModule ~= nil
 end
 
 function Generation:MakeValueSwapsTable(): table
@@ -511,5 +526,6 @@ function Generation:DumpLogs(Logs: table): string
 end
 
 return Generation
+
 
 
