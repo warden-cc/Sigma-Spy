@@ -516,8 +516,8 @@ function Generation:DumpLogs(Logs: table): string
 	return FilePath
 end
 
+function Generation:IsReady()
+    return ParserModule ~= nil
+end
+
 return Generation
-
-
-
-
