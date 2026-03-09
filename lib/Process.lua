@@ -77,7 +77,6 @@ local Process = {
     ["wave"] = { ForceUseCustomComm = true },
         }
     }
-}
 
 --// Modules
 local Hook
@@ -596,6 +595,7 @@ end
 
 
 return Process
+
 
 
 
