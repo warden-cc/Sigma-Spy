@@ -209,11 +209,14 @@ end
 
 function Files:LoadModules(Modules: {}, Data: {})
     for Name, Module in next, Modules do
+        print("Iniciando modulo: " .. tostring(Name))
         local Init = Module.Init
-        if not Init then continue end
-
-		--// Invoke :Init function 
+        if not Init then 
+            print("  - Sin Init, saltando")
+            continue 
+        end
         Module:Init(Data)
+        print("  - " .. tostring(Name) .. " listo")
     end
 end
 
@@ -262,5 +265,6 @@ function Files:MakeActorScript(Scripts, ChannelId: number): string
 	ActorCode ..= `Libraries.Hook:BeginService(Libraries, ExtraData, {ChannelId})`
 	return ActorCode
 end
+
 
 return Files
