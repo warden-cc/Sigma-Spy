@@ -79,11 +79,13 @@ function Generation:Init(Data: table)
     Config = Modules.Config
     Hook = Modules.Hook
     Flags = Modules.Flags
-    
-    task.spawn(function()
-        local ParserUrl = Configuration.ParserUrl
-        self:LoadParser(ParserUrl)
-    end)
+
+    -- HttpGet en el hilo principal, loadstring en task.spawn
+    print("GEN - Descargando parser...")
+    local ParserUrl = Configuration.ParserUrl
+    local Code = game:HttpGet(ParserUrl)
+    print("GEN - Descarga lista, ejecutando en background...")
+    self:LoadParser(Code)
 end
 
 function Generation:MakePrintable(String: string): string
@@ -107,29 +109,18 @@ function Generation:WriteDump(Content: string): string
 	return FilePath
 end
 
-function Generation:LoadParser(ModuleUrl: string)
-    local done = false
+function Generation:LoadParser(Code: string)
     task.spawn(function()
-        print("PARSER 1 - Haciendo HttpGet")
-        local ok, result = pcall(function()
-            return game:HttpGet(ModuleUrl)
+        print("PARSER 2 - Ejecutando loadstring")
+        local ok, err = pcall(function()
+            ParserModule = loadstring(Code, "Parser")()
         end)
         if not ok then
-            warn("PARSER ERROR HttpGet: " .. tostring(result))
-            done = true
+            warn("PARSER ERROR: " .. tostring(err))
             return
         end
-        print("PARSER 2 - HttpGet terminado")
-        local ok2, err = pcall(function()
-            ParserModule = loadstring(result, "Parser")()
-        end)
-        if not ok2 then
-            warn("PARSER ERROR loadstring: " .. tostring(err))
-        end
-        print("PARSER 3 - Parser listo: " .. tostring(ParserModule ~= nil))
-        done = true
+        print("PARSER 3 - Parser listo")
     end)
-    repeat task.wait(0.1) until done
 end
 
 function Generation:MakeValueSwapsTable(): table
@@ -531,4 +522,5 @@ function Generation:IsReady()
 end
 
 return Generation
+
 
