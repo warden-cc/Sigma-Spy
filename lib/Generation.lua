@@ -108,7 +108,14 @@ function Generation:WriteDump(Content: string): string
 end
 
 function Generation:LoadParser(ModuleUrl: string)
-	ParserModule = loadstring(game:HttpGet(ModuleUrl), "Parser")()
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(ModuleUrl), "Parser")()
+    end)
+    if not success then
+        warn("SigmaSpy: Error cargando Parser: " .. tostring(result))
+        return
+    end
+    ParserModule = result
 end
 
 function Generation:MakeValueSwapsTable(): table
@@ -506,3 +513,4 @@ function Generation:DumpLogs(Logs: table): string
 end
 
 return Generation
+
