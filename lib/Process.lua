@@ -140,11 +140,6 @@ function Process:GetConfigOverwrites(Name: string)
     local ConfigOverwrites = self.ConfigOverwrites
     return ConfigOverwrites[Name]
 end
-    if not Found then continue end
-        return Overwrites
-    end
-    return
-end
 
 function Process:CheckConfig(Config: table)
     local Name = identifyexecutor():lower()
@@ -601,5 +596,6 @@ end
 
 
 return Process
+
 
 
