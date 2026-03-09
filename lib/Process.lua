@@ -139,7 +139,11 @@ function Process:GetConfigOverwrites(Name: string)
     local ConfigOverwrites = self.ConfigOverwrites
 
     for List, Overwrites in next, ConfigOverwrites do
-        if not table.find(List, Name) then continue end
+    local Found = false
+    for _, ExecutorName in next, List do
+        if ExecutorName == Name then Found = true break end
+    end
+    if not Found then continue end
         return Overwrites
     end
     return
@@ -597,3 +601,4 @@ end
 
 
 return Process
+
